@@ -31,13 +31,23 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             return entity.Id;
         }
 
-        public async Task<int> CreatePost(Post entity)
+        public async Task<int> CreatePost(CreatePostVm entity)
         {
-            entity.Id = 0;
-            entity.Url = SlugHelper.Create(true, entity.Title);
-            _context.Posts.Add(entity);
+            Post post = new Post();
+            post.Id = 0;
+            post.Url = SlugHelper.Create(true, entity.Title);
+            _context.Posts.Add(post);
             await _context.SaveChangesAsync();
-            return entity.Id;
+
+            PostImage postImage = new PostImage();
+            postImage.Id = 0;
+            postImage.IsTrained = false;
+            postImage.PostId = post.Id;
+            postImage.Image = entity.Image;
+            _context.PostImages.Add(postImage);
+            await _context.SaveChangesAsync();
+            
+            return post.Id;
         }
 
         public async Task<PostDetailVm> GetPostById(int id)
@@ -55,12 +65,13 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             vm.TotalLikes = post.LikeCount;
 
 
-            var category = _context.Categories.Where(x => x.Id == post.CategoryId)
-                                              .AsNoTracking().FirstOrDefault();
-            vm.Category = category.Title;
+            vm.Category = _context.Categories.Where(x => x.Id == post.CategoryId)
+                                              .Select(x => x.Title)
+                                              .AsNoTracking().FirstOrDefault(); 
 
-            var model = _context.Models.Where(x => x.Id == post.ModelId).AsNoTracking().FirstOrDefault();
-            vm.Model = model.Title;  
+            vm.Model = _context.Models.Where(x => x.Id == post.ModelId)
+                                      .Select(x => x.Title)
+                                      .AsNoTracking().FirstOrDefault();
 
             var comments = await _context.PostComments.AsNoTracking().Where(x => x.PostId == id).ToListAsync();
             var postComments = new List<PostCommentVm>();
@@ -80,15 +91,49 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             return vm;
         }
 
-        public Task<List<PostDetailVm>> GetPosts()
+        public async Task<PostListVm> GetPosts()
         {
+            PostListVm vm = new PostListVm();
+            var q = _context.Posts.AsNoTracking().Select( x => new PostListDto{
+                Id = x.Id,
+                Title = x.Title,
+                Category = GetCategoryNameById(x.CategoryId),
+                Model = GetModelNameById(x.ModelId),
+                PostLikeCount = x.LikeCount,
+                Image  = GetPostImageFromPostId(x.Id)  
+            }).AsNoTracking();
+
+            vm.Posts = await q.OrderByDescending(x =>x.Id).ToListAsync();
+            return vm;
             
-            throw new System.NotImplementedException();
+        }
+        
+        
+        public async Task<int> SaveImageInDb(PostImage entity)
+        {
+            entity.Id = 0;
+            entity.IsTrained = false;
+            _context.PostImages.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id;
         }
 
-        public Task<int> SaveImageInDb()
+        private string GetCategoryNameById(int categoryId)
         {
-            throw new System.NotImplementedException();
+            return _context.Categories.Where(x => x.Id == categoryId)
+                                       .Select(x => x.Title).FirstOrDefault();
+        }
+
+        private string GetModelNameById(int modelId)
+        {
+            return _context.Models.Where(x => x.Id == modelId)
+                                  .Select(x => x.Title).FirstOrDefault();
+        }
+
+        private string GetPostImageFromPostId(int postId)
+        {
+            return _context.PostImages.Where(x=> x.PostId == postId)
+                                      .Select(x => x.Image).FirstOrDefault();
         }
     }
 }
