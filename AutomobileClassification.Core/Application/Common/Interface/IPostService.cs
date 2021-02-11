@@ -7,12 +7,12 @@ namespace AutomobileClassification.Core.Application.Common.Interface
 {
     public interface IPostService
     {
-         Task<int> CreatePost(Post entity);
+         Task<int> CreatePost(CreatePostVm entity);
          Task<PostDetailVm> GetPostById(int id);
-         Task<List<PostDetailVm>> GetPosts();
+         Task<PostListVm> GetPosts();
          Task<int> CreateComment(PostComment entity);
          Task<int> CreateLike(PostLike entity);
-         Task<int> SaveImageInDb();
+         Task<int> SaveImageInDb(PostImage entity);
          
     }
 }
