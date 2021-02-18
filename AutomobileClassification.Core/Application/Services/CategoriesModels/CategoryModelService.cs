@@ -4,14 +4,15 @@ using System.Threading.Tasks;
 using AutomobileClassification.Core.Application.Common.Helpers;
 using AutomobileClassification.Core.Application.Common.Interface;
 using AutomobileClassification.Core.Domain.Entities;
+using AutomobileClassification.Core.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutomobileClassification.Core.Application.Services.CategoriesModels
 {
     public class CategoryModelService : ICategoryModelService
     {
-        private readonly IAppDbContext _context;
-        public CategoryModelService(IAppDbContext context)
+        private readonly AppDbContext _context;
+        public CategoryModelService(AppDbContext context)
         {
             _context = context;
         }

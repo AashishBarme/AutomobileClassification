@@ -5,13 +5,15 @@ using AutomobileClassification.Core.Application.Common.Helpers;
 using AutomobileClassification.Core.Application.Common.Interface;
 using AutomobileClassification.Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using AutomobileClassification.Core.Infrastructure.Persistence;
 
 namespace AutomobileClassification.Core.Application.Services.Posts
 {
     public class PostService : IPostService
     {
-        private readonly IAppDbContext _context;
-        public PostService(IAppDbContext context)
+        private readonly AppDbContext _context;
+        public PostService(AppDbContext context)
         {
             _context = context;
         } 
@@ -36,6 +38,10 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             Post post = new Post();
             post.Id = 0;
             post.Url = SlugHelper.Create(true, entity.Title);
+            post.Title = entity.Title;
+            post.CategoryId = entity.CategoryId;
+            post.ModelId = entity.ModelId;
+            post.UserId = entity.UserId;
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
@@ -62,7 +68,6 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             vm.Title = post.Title;
             vm.Image = "testImage.jpg";
             vm.Url = post.Url;
-            vm.TotalLikes = post.LikeCount;
 
 
             vm.Category = _context.Categories.Where(x => x.Id == post.CategoryId)

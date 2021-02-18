@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -5,16 +7,16 @@ using System.Threading;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutomobileClassification.Core.Domain.Entities;
+using AutomobileClassification.Core.Application.Common.Interface;
 
 namespace AutomobileClassification.Core.Infrastructure.Persistence
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext, IAppDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            
         }
-
+    
         public DbSet<Category> Categories {get; set;}
         public DbSet<Model> Models {get; set;}
         public DbSet<Post> Posts {get; set;}
