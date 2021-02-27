@@ -1,15 +1,14 @@
+using System.IO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-
+using System.Threading.Tasks;  
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using System.Text.Json;
 using AutomobileClassification.Core.Domain.Entities;
 using AutomobileClassification.Core.Application.Services.Posts;
 using AutomobileClassification.Core.Application.Common.Interface;
-using System.Threading.Tasks;
 using AutomobileClassification.Core.Application.Common.Exceptions;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApi.Controllers
 {
@@ -18,16 +17,32 @@ namespace WebApi.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostService _postService;
-        public PostsController(IPostService postSerice)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public PostsController(IPostService postSerice,
+        IWebHostEnvironment hostEnvironment)
         {
             _postService = postSerice;
+            _hostEnvironment = hostEnvironment;
         }
         // POST: api/posts
         [HttpPost]
-        public async Task<ActionResult<int>> CreatePost(CreatePostVm entity)
+        public async Task<ActionResult<int>> CreatePost([FromForm] CreatePostVm entity)
         {
             try
             {
+                var a = _hostEnvironment.WebRootPath;
+                var file = entity.Image;
+                var fileName = Path.GetFileName(file.FileName);
+                string extension = Path.GetExtension(file.FileName);
+                fileName =  fileName + DateTime.Now.ToString("yymmssff") + extension;
+                var filePath = Path.Combine(_hostEnvironment.WebRootPath, "Uploads",fileName);
+                using (var fileSteam = new FileStream(filePath, FileMode.Create))
+                {
+                    await entity.Image.CopyToAsync(fileSteam);
+                }
+                entity.ImageName = fileName;
+
+                //Create the Directory.
                 return await _postService.CreatePost(entity);
             }
             catch (NotFoundException)
@@ -39,4 +54,5 @@ namespace WebApi.Controllers
 
         
     }
+
 }
