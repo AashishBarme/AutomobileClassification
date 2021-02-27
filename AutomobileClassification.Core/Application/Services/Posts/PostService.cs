@@ -1,3 +1,4 @@
+using System.Security.AccessControl;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,7 +50,7 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             postImage.Id = 0;
             postImage.IsTrained = false;
             postImage.PostId = post.Id;
-            postImage.Image = entity.Image;
+            postImage.Image = entity.ImageName;
             _context.PostImages.Add(postImage);
             await _context.SaveChangesAsync();
             
@@ -122,6 +123,7 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             await _context.SaveChangesAsync();
             return entity.Id;
         }
+
 
         private string GetCategoryNameById(int categoryId)
         {
