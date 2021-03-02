@@ -30,10 +30,16 @@ namespace AutomobileClassification.Core.Application.Services.Posts
 
         public async Task<int> CreateLike(PostLike entity)
         {
-            entity.Id = 0;
-            _context.PostLikes.Add(entity);
-            await _context.SaveChangesAsync();
-            return entity.Id;
+            var checker = _context.PostLikes
+                         .Any(x => x.PostId == entity.PostId && x.UserId == entity.UserId);
+            if(!checker)
+            {            
+                entity.Id = 0;
+                _context.PostLikes.Add(entity);
+                await _context.SaveChangesAsync();
+                return entity.Id;
+            }
+            return 0;
         }
 
         public async Task<int> CreatePost(CreatePostVm entity)
@@ -105,7 +111,7 @@ namespace AutomobileClassification.Core.Application.Services.Posts
         public async Task<PostListVm> GetPosts()
         {
             PostListVm vm = new PostListVm();
-            var q = _context.Posts.AsNoTracking()
+            var data = _context.Posts.AsNoTracking()
                 .Include(x=>x.CategoryRef)
                 .Include(x=>x.ModelRef)
                 .Include(x => x.PostImageRef)
@@ -115,11 +121,13 @@ namespace AutomobileClassification.Core.Application.Services.Posts
                 Slug = x.Url,
                 Category = x.CategoryRef.Title,
                 Model = x.ModelRef.Title,
-                PostLikeCount = x.LikeCount,
-                Image  = x.PostImageRef.Image   
+                Image  = x.PostImageRef.Image,
+                PostLikeCount = _context.PostLikes
+                                      .Where(y => y.PostId == x.Id)
+                                      .Count()   
             }).AsNoTracking();
 
-            vm.Posts = await q.OrderByDescending(x =>x.Id).ToListAsync();
+            vm.Posts = await data.OrderByDescending(x =>x.Id).ToListAsync();
             return vm;  
         }
         
@@ -137,8 +145,10 @@ namespace AutomobileClassification.Core.Application.Services.Posts
                     Slug = x.Url,
                     Category = x.CategoryRef.Title,
                     Model = x.ModelRef.Title,
-                    PostLikeCount = x.LikeCount,
-                    Image  = x.PostImageRef.Image   
+                    Image  = x.PostImageRef.Image,
+                    PostLikeCount = _context.PostLikes
+                                      .Where(y => y.PostId == x.Id)
+                                      .Count()     
                 }).AsNoTracking();
 
                 vm.Posts = await q.OrderByDescending(x =>x.Id).ToListAsync();
@@ -154,6 +164,7 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             await _context.SaveChangesAsync();
             return entity.Id;
         }
+
 
     }
 }

@@ -51,6 +51,36 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("/api/posts/like")]
+        [HttpPost]
+        public async Task<ActionResult<int>> AddPostLike(PostLike entity)
+        {
+            try
+            {
+                return await _postService.CreateLike(entity);
+            }
+            catch(NotFoundException)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("/api/posts/comments")]
+        [HttpPost]
+        public async Task<ActionResult<int>> AddPostComments(PostComment entity)
+        {
+            try
+            {
+                return await _postService.CreateComment(entity);
+            }
+            catch(NotFoundException)
+            {
+                return BadRequest();
+            }
+        }
+
+
+
         [Route("/api/posts/list")]
         [HttpGet]
         public async Task<ActionResult<PostListVm>> ListPost()
@@ -66,7 +96,7 @@ namespace WebApi.Controllers
             }
         }
         
-        [Route("/api/posts/{url}")]
+        [Route("/api/posts/details/{url}")]
         [HttpGet("{url}")]
         public async Task<ActionResult<PostDetailVm>> GetPost(string url)
         {
@@ -92,6 +122,8 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
         }
+
+
 
 
         
