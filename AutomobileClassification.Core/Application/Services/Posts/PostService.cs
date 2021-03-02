@@ -57,19 +57,21 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             return post.Id;
         }
 
-        public async Task<PostDetailVm> GetPostById(int id)
+        public async Task<PostDetailVm> GetPostByUrl(string url)
         {
             var vm = new PostDetailVm();
-            Post post = _context.Posts.Where(x=> x.Id == id).AsNoTracking().FirstOrDefault();
+            Post post = _context.Posts.Where(x=> x.Url == url).AsNoTracking().FirstOrDefault();
             if(post == null)
             {
                throw null;
             }
 
             vm.Title = post.Title;
-            vm.Image = "testImage.jpg";
             vm.Url = post.Url;
-
+            vm.Image = _context.PostImages.Where(x => x.PostId == post.Id)
+                                          .Select(x => x.Image)
+                                        .AsNoTracking().FirstOrDefault();
+            
 
             vm.Category = _context.Categories.Where(x => x.Id == post.CategoryId)
                                               .Select(x => x.Title)
@@ -79,7 +81,7 @@ namespace AutomobileClassification.Core.Application.Services.Posts
                                       .Select(x => x.Title)
                                       .AsNoTracking().FirstOrDefault();
 
-            var comments = await _context.PostComments.AsNoTracking().Where(x => x.PostId == id).ToListAsync();
+            var comments = await _context.PostComments.AsNoTracking().Where(x => x.PostId == post.Id).ToListAsync();
             var postComments = new List<PostCommentVm>();
             if(comments.Count > 0)
             {
@@ -100,13 +102,18 @@ namespace AutomobileClassification.Core.Application.Services.Posts
         public async Task<PostListVm> GetPosts()
         {
             PostListVm vm = new PostListVm();
-            var q = _context.Posts.AsNoTracking().Select( x => new PostListDto{
+            var q = _context.Posts.AsNoTracking()
+                .Include(x=>x.CategoryRef)
+                .Include(x=>x.ModelRef)
+                .Include(x => x.PostImageRef)
+                .Select( x => new PostListDto{
                 Id = x.Id,
                 Title = x.Title,
-                Category = GetCategoryNameById(x.CategoryId),
-                Model = GetModelNameById(x.ModelId),
+                Slug = x.Url,
+                Category = x.CategoryRef.Title,
+                Model = x.ModelRef.Title,
                 PostLikeCount = x.LikeCount,
-                Image  = GetPostImageFromPostId(x.Id)  
+                Image  = x.PostImageRef.Image   
             }).AsNoTracking();
 
             vm.Posts = await q.OrderByDescending(x =>x.Id).ToListAsync();

@@ -9,7 +9,7 @@ namespace AutomobileClassification.Core.Application.Common.Interface
     public interface IPostService
     {
          Task<int> CreatePost(CreatePostVm entity);
-         Task<PostDetailVm> GetPostById(int id);
+         Task<PostDetailVm> GetPostByUrl(string url);
          Task<PostListVm> GetPosts();
          Task<int> CreateComment(PostComment entity);
          Task<int> CreateLike(PostLike entity);

@@ -13,10 +13,10 @@ namespace WebApi.Controllers
 
     [Route("/api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class CategoriesModelsController : ControllerBase
     {
         private readonly ICategoryModelService _service;
-        public CategoriesController(ICategoryModelService service)
+        public CategoriesModelsController(ICategoryModelService service)
         {
             _service = service;
         }
@@ -27,6 +27,13 @@ namespace WebApi.Controllers
         public async Task<ActionResult<int>> CreateCategory(Category entity)
         {
             return await _service.CreateCategory(entity);
+        }
+
+        [Route("/api/models/create")]
+        [HttpPost]
+        public async Task<ActionResult<int>> CreateModel(Model entity)
+        {
+            return await _service.CreateModel(entity);
         }
     }
 }

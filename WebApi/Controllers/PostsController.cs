@@ -32,7 +32,7 @@ namespace WebApi.Controllers
             {
                 var a = _hostEnvironment.WebRootPath;
                 var file = entity.Image;
-                var fileName = Path.GetFileName(file.FileName);
+                var fileName = Path.GetFileNameWithoutExtension(file.FileName);
                 string extension = Path.GetExtension(file.FileName);
                 fileName =  fileName + DateTime.Now.ToString("yymmssff") + extension;
                 var filePath = Path.Combine(_hostEnvironment.WebRootPath, "Uploads",fileName);
@@ -46,6 +46,34 @@ namespace WebApi.Controllers
                 return await _postService.CreatePost(entity);
             }
             catch (NotFoundException)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("/api/posts/list")]
+        [HttpGet]
+        public async Task<ActionResult<PostListVm>> ListPost()
+        {
+            try
+            {
+                return await _postService.GetPosts();
+                
+            }
+            catch(NotFoundException)
+            {
+                return BadRequest();    
+            }
+        }
+        
+        [Route("/api/posts/{url}")]
+        [HttpGet("{url}")]
+        public async Task<ActionResult<PostDetailVm>> GetPost(string url)
+        {
+            try{
+                return await _postService.GetPostByUrl(url);
+            }
+            catch(NotFoundException)
             {
                 return BadRequest();
             }

@@ -34,7 +34,8 @@ namespace AutomobileClassification.Core.Application.Services.CategoriesModels
             await _context.SaveChangesAsync();
             return entity.Id;
         }
-        
+
+       
         public Task<List<Category>> GetCategories()
         {
             return _context.Categories.OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
