@@ -38,12 +38,15 @@ namespace AutomobileClassification.Core.Application.Services.CategoriesModels
        
         public Task<List<Category>> GetCategories()
         {
-            return _context.Categories.OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
+            return _context.Categories.OrderByDescending(x => x.Id)
+            .AsNoTracking().ToListAsync();
         }
 
         public Task<List<Model>> GetModels()
         {
-            return _context.Models.OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
+            return _context.Models.OrderByDescending(x => x.Id)
+            .AsNoTracking().ToListAsync();
         }
+
     }
 }    

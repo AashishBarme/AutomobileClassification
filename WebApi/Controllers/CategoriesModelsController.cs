@@ -35,5 +35,12 @@ namespace WebApi.Controllers
         {
             return await _service.CreateModel(entity);
         }
+
+        [Route("/api/categories/list")]
+        [HttpGet]
+        public async Task<ActionResult<List<Category>>> ListCategory()
+        {
+            return await _service.GetCategories();
+        }
     }
 }

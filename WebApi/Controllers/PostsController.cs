@@ -77,6 +77,20 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
+        }   
+
+        [Route("/api/posts/category/{url}")]
+        [HttpGet("{url}")]
+        public async Task<ActionResult<PostListVm>> ListPostByCategory(string url)
+        {
+            try
+            {
+                return await _postService.GetPostsByCategory(url);
+            }
+            catch(NotFoundException)
+            {
+                return BadRequest();
+            }
         }
 
 

@@ -14,9 +14,11 @@ namespace AutomobileClassification.Core.Application.Services.Posts
     public class PostService : IPostService
     {
         private readonly AppDbContext _context;
-        public PostService(AppDbContext context)
+        private readonly ICategoryModelService _categoryModelService;
+        public PostService(AppDbContext context, ICategoryModelService categoryModelService)
         {
             _context = context;
+            _categoryModelService = categoryModelService;
         } 
         public async Task<int> CreateComment(PostComment entity)
         {
@@ -60,7 +62,8 @@ namespace AutomobileClassification.Core.Application.Services.Posts
         public async Task<PostDetailVm> GetPostByUrl(string url)
         {
             var vm = new PostDetailVm();
-            Post post = _context.Posts.Where(x=> x.Url == url).AsNoTracking().FirstOrDefault();
+            Post post = _context.Posts.Where(x=> x.Url == url)
+                                      .AsNoTracking().FirstOrDefault();
             if(post == null)
             {
                throw null;
@@ -117,11 +120,32 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             }).AsNoTracking();
 
             vm.Posts = await q.OrderByDescending(x =>x.Id).ToListAsync();
-            return vm;
-            
+            return vm;  
         }
         
-        
+         public async Task<PostListVm> GetPostsByCategory(string url)
+        {
+                PostListVm vm = new PostListVm();
+                var q = _context.Posts.AsNoTracking()
+                    .Include(x=>x.CategoryRef)
+                    .Include(x=>x.ModelRef)
+                    .Include(x => x.PostImageRef)
+                    .Where(x => x.CategoryRef.Slug == url)
+                    .Select( x => new PostListDto{
+                    Id = x.Id,
+                    Title = x.Title,
+                    Slug = x.Url,
+                    Category = x.CategoryRef.Title,
+                    Model = x.ModelRef.Title,
+                    PostLikeCount = x.LikeCount,
+                    Image  = x.PostImageRef.Image   
+                }).AsNoTracking();
+
+                vm.Posts = await q.OrderByDescending(x =>x.Id).ToListAsync();
+                return vm;
+
+        }
+
         public async Task<int> SaveImageInDb(PostImage entity)
         {
             entity.Id = 0;
@@ -131,23 +155,5 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             return entity.Id;
         }
 
-
-        private string GetCategoryNameById(int categoryId)
-        {
-            return _context.Categories.Where(x => x.Id == categoryId)
-                                       .Select(x => x.Title).FirstOrDefault();
-        }
-
-        private string GetModelNameById(int modelId)
-        {
-            return _context.Models.Where(x => x.Id == modelId)
-                                  .Select(x => x.Title).FirstOrDefault();
-        }
-
-        private string GetPostImageFromPostId(int postId)
-        {
-            return _context.PostImages.Where(x=> x.PostId == postId)
-                                      .Select(x => x.Image).FirstOrDefault();
-        }
     }
 }

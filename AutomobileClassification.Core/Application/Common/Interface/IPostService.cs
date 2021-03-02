@@ -13,6 +13,7 @@ namespace AutomobileClassification.Core.Application.Common.Interface
          Task<PostListVm> GetPosts();
          Task<int> CreateComment(PostComment entity);
          Task<int> CreateLike(PostLike entity);
+         Task<PostListVm> GetPostsByCategory(string url);
          Task<int> SaveImageInDb(PostImage entity);
          
     }
