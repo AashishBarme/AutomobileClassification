@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutomobileClassification.Core.Application.Common.Exceptions;
 using AutomobileClassification.Core.Application.Common.Helpers;
 using AutomobileClassification.Core.Application.Common.Interface;
 using AutomobileClassification.Core.Domain.Entities;
@@ -35,7 +36,19 @@ namespace AutomobileClassification.Core.Application.Services.CategoriesModels
             return entity.Id;
         }
 
-       
+
+        public async Task<Category> GetCategory(string title)
+        {
+            var url = SlugHelper.Create(true, title); 
+            var entity =  await _context.Categories.Where(x => x.Slug == url).FirstOrDefaultAsync();
+            if(entity == null)
+            {
+                throw new NotFoundException();
+            }
+            return entity;
+
+        }
+
         public Task<List<Category>> GetCategories()
         {
             return _context.Categories.OrderByDescending(x => x.Id)
