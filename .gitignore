@@ -340,4 +340,4 @@ ASALocalRun/
 healthchecksdb
 
 wwwroot
-ImageClassification.Train/assets/
+*.assets
