@@ -58,6 +58,7 @@ artifacts/
 
 # StyleCop
 StyleCopReport.xml
+*.assets
 
 # Files built by Visual Studio
 *_i.c
@@ -340,4 +341,4 @@ ASALocalRun/
 healthchecksdb
 
 wwwroot
-*.assets
+*.assets/
