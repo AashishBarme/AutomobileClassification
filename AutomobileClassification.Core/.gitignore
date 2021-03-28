@@ -342,5 +342,3 @@ healthchecksdb
 
 wwwroot
 *.assets/
-ImageClassification.Predict/assets
-ImageClassification.Train/assets
