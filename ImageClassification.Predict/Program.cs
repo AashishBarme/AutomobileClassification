@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using ImageClassification.DataModels;
 using Microsoft.ML;
 using Microsoft.ML.Data;

@@ -49,6 +49,17 @@ namespace AutomobileClassification.Core.Application.Services.CategoriesModels
 
         }
 
+         public string GetCategoryById(int id)
+        {
+            var entity =   _context.Categories.Where(x => x.Id == id).FirstOrDefault();
+            if(entity == null)
+            {
+                throw new NotFoundException();
+            }
+            return entity.Slug;
+
+        }
+
         public Task<List<Category>> GetCategories()
         {
             return _context.Categories.OrderByDescending(x => x.Id)

@@ -21,13 +21,14 @@ namespace ImageClassification.Train
             const string assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
-            string outputMlNetModelFilePath = Path.Combine(assetsPath, "outputs", "imageClassifier.zip");
+            string outputMlNetModelFilePath = Path.Combine("/var/www/dotnet/AutomobileClassification/ImageClassification.Predict/assets/", "outputs", "imageClassifier.zip");
             string imagesFolderPathForPredictions = Path.Combine(assetsPath, "inputs", "test-images");
 
             string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
-
+            Console.WriteLine("Folder Path::" + imagesDownloadFolderPath);
             // 1. Download the image set and unzip
             string finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
+                        Console.WriteLine("Final Image Folder Name: " + finalImagesFolderName);
             string fullImagesetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
 
             var mlContext = new MLContext(seed: 1);
@@ -41,6 +42,8 @@ namespace ImageClassification.Train
             //TODO::Adding Category When Training 
             foreach (var image in images)
             {
+                Console.WriteLine(image.ImagePath);
+                Console.WriteLine(image.Label);
                 trainService.AddCategories(image.Label);
             }
             IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);

@@ -110,6 +110,9 @@ namespace AutomobileClassification.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("CategoryLabel")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<string>("Image")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 

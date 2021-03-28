@@ -8,6 +8,7 @@ using AutomobileClassification.Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using AutomobileClassification.Core.Infrastructure.Persistence;
+using AutomobileClassification.Core.Application.Services.CategoriesModels;
 
 namespace AutomobileClassification.Core.Application.Services.Posts
 {
@@ -59,6 +60,7 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             postImage.IsTrained = false;
             postImage.PostId = post.Id;
             postImage.Image = entity.ImageName;
+            postImage.CategoryLabel = _categoryModelService.GetCategoryById(entity.CategoryId);
             _context.PostImages.Add(postImage);
             await _context.SaveChangesAsync();
             

@@ -10,5 +10,6 @@ namespace AutomobileClassification.Core.Application.Common.Interface
          Task<int> CreateModel(Model entity);
          Task<List<Category>> GetCategories();
          Task<List<Model>> GetModels();
+        string GetCategoryById(int id);
     }
 }
