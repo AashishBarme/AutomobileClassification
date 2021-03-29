@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ImageClassification.DataModels;
-using ImageClassification.Shared.Service;
+// using ImageClassification.Shared.Service;
 
 namespace ImageClassification
 {

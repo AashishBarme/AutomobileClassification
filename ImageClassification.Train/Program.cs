@@ -27,10 +27,11 @@ namespace ImageClassification.Train
             string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
             Console.WriteLine("Folder Path::" + imagesDownloadFolderPath);
             // 1. Download the image set and unzip
-            string finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
+           // string finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
+           string finalImagesFolderName = "image_dataset";
                         Console.WriteLine("Final Image Folder Name: " + finalImagesFolderName);
             string fullImagesetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
-
+            Console.WriteLine("Full Image Set Folder Path:" + fullImagesetFolderPath);
             var mlContext = new MLContext(seed: 1);
 
             // Specify MLContext Filter to only show feedback log/traces about ImageClassification
@@ -44,7 +45,8 @@ namespace ImageClassification.Train
             {
                 Console.WriteLine(image.ImagePath);
                 Console.WriteLine(image.Label);
-                trainService.AddCategories(image.Label);
+                var Id = trainService.AddCategories(image.Label);
+                Console.WriteLine(Id);
             }
             IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
             IDataView shuffledFullImageFilePathsDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
