@@ -95,9 +95,9 @@ namespace WebApi.Controllers
                 return BadRequest();    
             }
         }
-        
+
         [Route("/api/posts/details/{url}")]
-        [HttpGet("{url}")]
+        [HttpGet]
         public async Task<ActionResult<PostDetailVm>> GetPost(string url)
         {
             try{
@@ -107,10 +107,10 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-        }   
+        }
 
         [Route("/api/posts/category/{url}")]
-        [HttpGet("{url}")]
+        [HttpGet]
         public async Task<ActionResult<PostListVm>> ListPostByCategory(string url)
         {
             try
