@@ -8,10 +8,11 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AutomobileClassification.Core.Domain.Entities;
 using AutomobileClassification.Core.Application.Common.Interface;
+using AutomobileClassification.Core.Infrastructure.Identity;
 
 namespace AutomobileClassification.Core.Infrastructure.Persistence
 {
-    public class AppDbContext : IdentityDbContext, IAppDbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<long>, long>, IAppDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
