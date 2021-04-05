@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 using Microsoft.OpenApi.Models;
 using System;
+using AutomobileClassification.Core.Infrastructure.Identity;
 
 namespace WebApi
 {
@@ -31,7 +32,8 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.AddApplication(Configuration);
+            services.AddControllers();
             var mysqlSettings = Configuration.GetSection("MysqlVersion");
             services.AddDbContext<AppDbContext>(
                 option =>{
@@ -40,12 +42,22 @@ namespace WebApi
                     
                 }
             );
-            services.AddApplication(Configuration);
-            services.AddControllers();
-            // services.AddSwaggerGen(c =>
-            // {
-            //     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
-            // });
+             services.AddIdentity<ApplicationUser, IdentityRole<long>>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Lockout.AllowedForNewUsers = false;
+
+            }).AddSignInManager().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+             services.AddJwtAuthentication(Configuration);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,11 +66,12 @@ namespace WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                // app.UseSwagger();
-                // app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
             }
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
