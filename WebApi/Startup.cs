@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using System;
 using AutomobileClassification.Core.Infrastructure.Identity;
+using Microsoft.Extensions.ML;
+using ImageClassification.DataModels;
 
 namespace WebApi
 {
@@ -58,6 +60,12 @@ namespace WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
+
+            /////////////////////////////////////////////////////////////////////////////
+            // Register the PredictionEnginePool as a service in the IoC container for DI.
+            //
+            services.AddPredictionEnginePool<InMemoryImageData, ImagePrediction>()
+                    .FromFile(Configuration["MLModel:MLModelFilePath"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
