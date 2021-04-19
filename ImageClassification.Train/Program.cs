@@ -68,33 +68,33 @@ namespace ImageClassification.Train
 
             // 5. Define the model's training pipeline using DNN default values
             //
-            var pipeline = mlContext.MulticlassClassification.Trainers
-                    .ImageClassification(featureColumnName: "Image",
-                                         labelColumnName: "LabelAsKey",
-                                         validationSet: testDataView)
-                .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel",
-                                                                      inputColumnName: "PredictedLabel"));
+            // var pipeline = mlContext.MulticlassClassification.Trainers
+            //         .ImageClassification(featureColumnName: "Image",
+            //                              labelColumnName: "LabelAsKey",
+            //                              validationSet: testDataView)
+            //     .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel",
+            //                                                           inputColumnName: "PredictedLabel"));
 
             // 5.1 (OPTIONAL) Define the model's training pipeline by using explicit hyper-parameters
             //
-            //var options = new ImageClassificationTrainer.Options()
-            //{
-            //    FeatureColumnName = "Image",
-            //    LabelColumnName = "LabelAsKey",
-            //    // Just by changing/selecting InceptionV3/MobilenetV2/ResnetV250  
-            //    // you can try a different DNN architecture (TensorFlow pre-trained model). 
-            //    Arch = ImageClassificationTrainer.Architecture.MobilenetV2,
-            //    Epoch = 50,       //100
-            //    BatchSize = 10,
-            //    LearningRate = 0.01f,
-            //    MetricsCallback = (metrics) => Console.WriteLine(metrics),
-            //    ValidationSet = testDataView
-            //};
+            var options = new ImageClassificationTrainer.Options()
+            {
+               FeatureColumnName = "Image",
+               LabelColumnName = "LabelAsKey",
+               // Just by changing/selecting InceptionV3/MobilenetV2/ResnetV250
+               // you can try a different DNN architecture (TensorFlow pre-trained model).
+               Arch = ImageClassificationTrainer.Architecture.ResnetV250,
+               Epoch = 250,       //100
+               BatchSize = 10,
+               LearningRate = 0.02f,
+               MetricsCallback = (metrics) => Console.WriteLine(metrics),
+               ValidationSet = testDataView
+            };
 
-            //var pipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(options)
-            //        .Append(mlContext.Transforms.Conversion.MapKeyToValue(
-            //            outputColumnName: "PredictedLabel",
-            //            inputColumnName: "PredictedLabel"));
+            var pipeline = mlContext.MulticlassClassification.Trainers.ImageClassification(options)
+                   .Append(mlContext.Transforms.Conversion.MapKeyToValue(
+                       outputColumnName: "PredictedLabel",
+                       inputColumnName: "PredictedLabel"));
 
             // 6. Train/create the ML model
             Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
