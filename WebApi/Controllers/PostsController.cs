@@ -87,7 +87,10 @@ namespace WebApi.Controllers
         {
             try
             {
-                return await _postService.GetPosts();
+                 var datas =  await _postService.GetPosts();
+
+
+                 return datas;
                 
             }
             catch(NotFoundException)

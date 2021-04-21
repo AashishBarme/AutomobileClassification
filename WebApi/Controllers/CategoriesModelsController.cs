@@ -29,6 +29,14 @@ namespace WebApi.Controllers
             return await _service.CreateCategory(entity);
         }
 
+        [Route("/api/category/getid/{title}")]
+        [HttpGet]
+        public async Task<ActionResult<int>> GetCategoryId(string title)
+        {
+            var category =  await _service.GetCategory(title);
+            return category.Id;
+        }
+
         [Route("/api/models/create")]
         [HttpPost]
         public async Task<ActionResult<int>> CreateModel(Model entity)

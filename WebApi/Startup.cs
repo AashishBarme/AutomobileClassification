@@ -63,10 +63,12 @@ namespace WebApi
 
              services.AddCors(c => c.AddPolicy("CorsPolicy", policy =>
             {
-                policy.WithOrigins("http://localhost:4200")
+                policy.WithOrigins("http://localhost:8080")
                 .AllowAnyMethod()
                 .AllowAnyHeader().AllowCredentials();
             }));
+
+            services.AddDirectoryBrowser();
 
             /////////////////////////////////////////////////////////////////////////////
             // Register the PredictionEnginePool as a service in the IoC container for DI.
@@ -89,7 +91,7 @@ namespace WebApi
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
             app.UseAuthorization();
-
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
