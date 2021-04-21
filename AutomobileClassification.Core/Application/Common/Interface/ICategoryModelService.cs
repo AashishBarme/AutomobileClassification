@@ -11,5 +11,6 @@ namespace AutomobileClassification.Core.Application.Common.Interface
          Task<List<Category>> GetCategories();
          Task<List<Model>> GetModels();
         string GetCategoryById(int id);
+        Task<Category> GetCategory(string title);
     }
 }

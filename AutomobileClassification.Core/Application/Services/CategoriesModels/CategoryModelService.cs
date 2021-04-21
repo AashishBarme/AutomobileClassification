@@ -7,6 +7,7 @@ using AutomobileClassification.Core.Application.Common.Interface;
 using AutomobileClassification.Core.Domain.Entities;
 using AutomobileClassification.Core.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace AutomobileClassification.Core.Application.Services.CategoriesModels
 {

@@ -50,7 +50,6 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             post.Url = SlugHelper.Create(true, entity.Title);
             post.Title = entity.Title;
             post.CategoryId = entity.CategoryId;
-            post.ModelId = entity.ModelId;
             post.UserId = entity.UserId;
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
@@ -88,9 +87,6 @@ namespace AutomobileClassification.Core.Application.Services.Posts
                                               .Select(x => x.Title)
                                               .AsNoTracking().FirstOrDefault(); 
 
-            vm.Model = _context.Models.Where(x => x.Id == post.ModelId)
-                                      .Select(x => x.Title)
-                                      .AsNoTracking().FirstOrDefault();
 
             var comments = await _context.PostComments.AsNoTracking().Where(x => x.PostId == post.Id).ToListAsync();
             var postComments = new List<PostCommentVm>();
@@ -115,14 +111,12 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             PostListVm vm = new PostListVm();
             var data = _context.Posts.AsNoTracking()
                 .Include(x=>x.CategoryRef)
-                .Include(x=>x.ModelRef)
                 .Include(x => x.PostImageRef)
                 .Select( x => new PostListDto{
                 Id = x.Id,
                 Title = x.Title,
                 Slug = x.Url,
                 Category = x.CategoryRef.Title,
-                Model = x.ModelRef.Title,
                 Image  = x.PostImageRef.Image,
                 PostLikeCount = _context.PostLikes
                                       .Where(y => y.PostId == x.Id)
@@ -138,7 +132,6 @@ namespace AutomobileClassification.Core.Application.Services.Posts
                 PostListVm vm = new PostListVm();
                 var q = _context.Posts.AsNoTracking()
                     .Include(x=>x.CategoryRef)
-                    .Include(x=>x.ModelRef)
                     .Include(x => x.PostImageRef)
                     .Where(x => x.CategoryRef.Slug == url)
                     .Select( x => new PostListDto{
@@ -146,7 +139,6 @@ namespace AutomobileClassification.Core.Application.Services.Posts
                     Title = x.Title,
                     Slug = x.Url,
                     Category = x.CategoryRef.Title,
-                    Model = x.ModelRef.Title,
                     Image  = x.PostImageRef.Image,
                     PostLikeCount = _context.PostLikes
                                       .Where(y => y.PostId == x.Id)
