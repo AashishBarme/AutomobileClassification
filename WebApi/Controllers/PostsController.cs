@@ -9,6 +9,7 @@ using AutomobileClassification.Core.Application.Services.Posts;
 using AutomobileClassification.Core.Application.Common.Interface;
 using AutomobileClassification.Core.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace WebApi.Controllers
 {
@@ -79,6 +80,31 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("/api/posts/comments/{postId}")]
+        [HttpGet]
+        public async Task<ActionResult<List<PostCommentVm>>> GetPostComments(int postId)
+        {
+            try
+            {
+                return await _postService.GetCommentsByPostId(postId);
+            }catch(NotFoundException)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("/api/posts/likes/{postId}")]
+        [HttpGet]
+        public ActionResult<int> GetPostTotalLikes(int postId)
+        {
+            try
+            {
+                return  _postService.GetTotalLikes(postId);
+            }catch(NotFoundException)
+            {
+                return BadRequest();
+            }
+        }
 
 
         [Route("/api/posts/list")]

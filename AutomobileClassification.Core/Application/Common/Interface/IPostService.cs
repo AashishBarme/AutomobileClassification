@@ -10,6 +10,8 @@ namespace AutomobileClassification.Core.Application.Common.Interface
     {
          Task<int> CreatePost(CreatePostVm entity);
          Task<PostDetailVm> GetPostByUrl(string url);
+         int GetTotalLikes (int postId);
+         Task<List<PostCommentVm>> GetCommentsByPostId(int postId);
          Task<PostListVm> GetPosts();
          Task<int> CreateComment(PostComment entity);
          Task<int> CreateLike(PostLike entity);

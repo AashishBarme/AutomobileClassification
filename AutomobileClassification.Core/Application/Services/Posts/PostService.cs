@@ -75,9 +75,12 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             {
                throw null;
             }
-
+            vm.Id = post.Id;
             vm.Title = post.Title;
             vm.Url = post.Url;
+            vm.TotalLikes = _context.PostLikes
+                                      .Where(y => y.PostId == post.Id)
+                                      .Count();
             vm.Image = _context.PostImages.Where(x => x.PostId == post.Id)
                                           .Select(x => x.Image)
                                         .AsNoTracking().FirstOrDefault();
@@ -96,14 +99,43 @@ namespace AutomobileClassification.Core.Application.Services.Posts
                 {
                     var postCommentVm = new PostCommentVm();
                     postCommentVm.Comment = item.Comment;
-                    //TODO:Change UserName
-                    postCommentVm.Username = "Test User";
+
+                    postCommentVm.Username = _context.Users.Where(x => x.Id == item.UserId)
+                                                           .Select(x => x.UserName)
+                                                           .AsNoTracking().FirstOrDefault();
                     postComments.Add(postCommentVm);
                 }
             }
 
             vm.Comments = postComments;
             return vm;
+        }
+
+        public async  Task<List<PostCommentVm>> GetCommentsByPostId(int postId)
+        {
+             var comments = await _context.PostComments.AsNoTracking().Where(x => x.PostId == postId).ToListAsync();
+            var postComments = new List<PostCommentVm>();
+            if(comments.Count > 0)
+            {
+                foreach (var item in comments)
+                {
+                    var postCommentVm = new PostCommentVm();
+                    postCommentVm.Comment = item.Comment;
+
+                    postCommentVm.Username = _context.Users.Where(x => x.Id == item.UserId)
+                                                           .Select(x => x.UserName)
+                                                           .AsNoTracking().FirstOrDefault();
+                    postComments.Add(postCommentVm);
+                }
+            }
+            return postComments;
+        }
+
+        public int GetTotalLikes (int postId)
+        {
+            return _context.PostLikes
+                                      .Where(y => y.PostId == postId)
+                                      .Count();
         }
 
         public async Task<PostListVm> GetPosts()
