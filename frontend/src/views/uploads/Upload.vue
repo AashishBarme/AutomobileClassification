@@ -1,5 +1,5 @@
 <template>
-       <div>
+       <div class="hero">
            <form>
                <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Image : </label>

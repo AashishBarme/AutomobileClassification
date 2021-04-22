@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomePageList from '../views/listing/HomePageList.vue';
 import Login from '../views/login/Login.vue';
+import PostDetails from '../views/post-details/PostDetails.vue';
 import Register from '../views/register/Register.vue';
 import Upload from '../views/uploads/Upload.vue';
 
@@ -27,6 +28,11 @@ const routes = [
         path : "/upload",
         name: "Upload",
         component: Upload
+    },
+    {
+        path: "/post/:url",
+        name: "PostDetail",
+        component: PostDetails
     }
 ]
 

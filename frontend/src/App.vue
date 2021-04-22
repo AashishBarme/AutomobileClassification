@@ -29,11 +29,18 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Mukta', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
+body{
+  font-family: 'Mukta', sans-serif !important;
+}
+.hero {
+    padding: 2.25rem 0px !important;
+    margin: 0px !important;
+  }
 </style>

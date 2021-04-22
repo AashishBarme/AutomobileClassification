@@ -1,6 +1,6 @@
 <template>
 <section>
-        <form >
+        <form class="hero" >
             <div class="form-group row">
               <label for="staticEmail" class="col-sm-2 col-form-label">FirstName :</label>
               <div class="col-sm-10">
