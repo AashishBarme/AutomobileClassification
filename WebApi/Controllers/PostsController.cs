@@ -152,6 +152,20 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("/api/posts/user/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult<PostListVm>> ListPostOfUser(int  userId)
+        {
+            try
+            {
+                return await _postService.GetPostsByUserId(userId);
+            }
+            catch(NotFoundException)
+            {
+                return BadRequest();
+            }
+        }
+
 
 
 

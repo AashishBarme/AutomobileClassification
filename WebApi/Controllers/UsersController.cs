@@ -11,6 +11,7 @@ using AutomobileClassification.Core.Application.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using AutomobileClassification.Core.Application.Common.Interface;
+using System.Net;
 
 namespace WebApi.Controllers
 {
@@ -71,6 +72,22 @@ namespace WebApi.Controllers
             return NoContent();
 
         }
+
+        [Route("/api/users/password/")]
+        [HttpPost]
+        public async Task<ActionResult<int>> UpdateUserPassword(UserUpdatePassword dto)
+        {
+            try
+            {
+                await _userService.ChangePassword(dto);
+                return 204;
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
          [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(long id)

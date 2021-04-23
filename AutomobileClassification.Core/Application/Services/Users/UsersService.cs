@@ -24,6 +24,7 @@ namespace AutomobileClassification.Core.Application.Services.Users
 
         public async Task ChangePassword(UserUpdatePassword dto)
         {
+            Console.WriteLine(dto);
             var user = await _userManager.GetUserById(dto.Id);
             if (user == null)
             {

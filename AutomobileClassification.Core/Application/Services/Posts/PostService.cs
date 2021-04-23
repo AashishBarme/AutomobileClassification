@@ -191,6 +191,26 @@ namespace AutomobileClassification.Core.Application.Services.Posts
             return entity.Id;
         }
 
+        public async Task<PostListVm> GetPostsByUserId(int userId)
+        {
+           PostListVm vm = new PostListVm();
+                var q = _context.Posts.AsNoTracking()
+                    .Include(x=>x.CategoryRef)
+                    .Include(x => x.PostImageRef)
+                    .Where(x => x.UserId == userId)
+                    .Select( x => new PostListDto{
+                    Id = x.Id,
+                    Title = x.Title,
+                    Slug = x.Url,
+                    Category = x.CategoryRef.Title,
+                    Image  = x.PostImageRef.Image,
+                    PostLikeCount = _context.PostLikes
+                                      .Where(y => y.PostId == x.Id)
+                                      .Count()
+                }).AsNoTracking();
 
+                vm.Posts = await q.OrderByDescending(x =>x.Id).ToListAsync();
+                return vm;
+        }
     }
 }
