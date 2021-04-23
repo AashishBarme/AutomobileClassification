@@ -1,13 +1,13 @@
 <template>
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+
       <Navbar></Navbar>
-    </div>
+
     <div class="col-md-3">
       <Sidebar> </Sidebar>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-7">
        <router-view/>
     </div>
   </div>
@@ -43,4 +43,11 @@ body{
     padding: 2.25rem 0px !important;
     margin: 0px !important;
   }
+.round-btn{
+  border-radius: 25px !important;
+}
+input, select, textarea{
+    border: 1px solid #ced4da !important;
+    border-radius: 0px!important;
+}
 </style>

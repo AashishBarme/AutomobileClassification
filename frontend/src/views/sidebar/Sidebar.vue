@@ -1,7 +1,7 @@
 <template>
     <div class="list-group hero">
         <h5 class="title-capital">category</h5>
-        <a v-for="item in object" :key="item.slug" :href="item.slug" class="list-group-item list-group-item-action list-category">
+        <a v-for="item in object" :key="item.slug" :href="'/category/'+item.slug" class="list-group-item list-group-item-action list-category">
             {{item.title}}
         </a>
     </div>

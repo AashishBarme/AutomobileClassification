@@ -37,7 +37,7 @@ export default{
         },
         PostComment()
         {
-            if(this.$data.comment.userId == null)
+            if(this.$data.currentUser == null)
             {
                 this.$data.helpers.DisplayErrorMessageIfNotLoggedIn();
             } else {
@@ -82,7 +82,7 @@ export default{
         },
         PostLike()
         {
-            if(this.$data.comment.userId == null)
+            if(this.$data.currentUser == null)
             {
                this.$data.helpers.DisplayErrorMessageIfNotLoggedIn();
             } else {

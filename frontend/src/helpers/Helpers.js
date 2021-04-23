@@ -14,9 +14,19 @@ export default class Helpers
     DisplayErrorMessageIfNotLoggedIn()
     {
         return Vue.swal({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'You must log in first'
+            title: 'Hey there!',
+            text: 'You forget to log in. You must log in first to post or like in this post',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: `Login`,
+            denyButtonText: `Register`,
+            }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/login`
+            } else if (result.isDenied) {
+                window.location.href = `/register`
+            }
+
         });
     }
 }
