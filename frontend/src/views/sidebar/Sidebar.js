@@ -16,6 +16,7 @@ export default {
     methods :{
         async GetDataFromDb()
         {
+            this.loading = true;
             try {
                 return axios
                         .get(Config.API_BASE_URL+'categories/list')
@@ -23,7 +24,11 @@ export default {
                             this.$data.object = response.data.map(item => {
                                 return new Model(item)
                             })
-                        })
+                        }).catch(error => {
+                            console.log(error)
+                            this.loading = false
+                          })
+                          .finally(() => (this.loading = false))
             } catch (error) {
                console.log(error)
             }

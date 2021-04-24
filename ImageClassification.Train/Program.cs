@@ -36,11 +36,11 @@ namespace ImageClassification.Train
 
             // Specify MLContext Filter to only show feedback log/traces about ImageClassification
             // This is not needed for feedback output if using the explicit MetricsCallback parameter
-            mlContext.Log += FilterMLContextLog;           
+            mlContext.Log += FilterMLContextLog;
 
             // 2. Load the initial full image-set into an IDataView and shuffle so it'll be better balanced
             IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: fullImagesetFolderPath, useFolderNameAsLabel: true);
-            //TODO::Adding Category When Training 
+            //TODO::Adding Category When Training
             foreach (var image in images)
             {
                 Console.WriteLine(image.ImagePath);
@@ -68,15 +68,7 @@ namespace ImageClassification.Train
 
             // 5. Define the model's training pipeline using DNN default values
             //
-            // var pipeline = mlContext.MulticlassClassification.Trainers
-            //         .ImageClassification(featureColumnName: "Image",
-            //                              labelColumnName: "LabelAsKey",
-            //                              validationSet: testDataView)
-            //     .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel",
-            //                                                           inputColumnName: "PredictedLabel"));
 
-            // 5.1 (OPTIONAL) Define the model's training pipeline by using explicit hyper-parameters
-            //
             var options = new ImageClassificationTrainer.Options()
             {
                FeatureColumnName = "Image",
@@ -123,7 +115,7 @@ namespace ImageClassification.Train
             Console.WriteLine("Press any key to finish");
             Console.ReadKey();
         }
-       
+
         private static void EvaluateModel(MLContext mlContext, IDataView testDataset, ITransformer trainedModel)
         {
             Console.WriteLine("Making predictions in bulk for evaluating model's quality...");
@@ -224,7 +216,7 @@ namespace ImageClassification.Train
             }
         }
 
-        
+
     }
 }
 

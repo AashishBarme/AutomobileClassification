@@ -1,5 +1,9 @@
 <template>
         <section class="hero">
+          <div v-if="loading">
+            <p><i>loading ...</i></p>
+          </div>
+          <div v-else>
          <div class="container">
           <div class="row">
          <div v-if="object.length > 0" class="col-lg-12">
@@ -39,6 +43,7 @@
 
           </div><!--/ row -->
          </div><!--/ container -->
+          </div>
         </section>
 </template>
 <script>

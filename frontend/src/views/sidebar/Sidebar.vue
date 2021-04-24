@@ -1,10 +1,16 @@
 <template>
-    <div class="list-group hero">
-        <h5 class="title-capital">category</h5>
-        <a v-for="item in object" :key="item.slug" :href="'/category/'+item.slug" class="list-group-item list-group-item-action list-category">
-            {{item.title}}
-        </a>
-    </div>
+<section class="hero">
+    <div v-if="loading">
+            <p><i>loading ...</i></p>
+          </div>
+          <div v-else>
+            <div class="list-group ">
+                <a v-for="item in object" :key="item.slug" :href="'/category/'+item.slug" class="list-group-item list-group-item-action list-category">
+                    {{item.title}}
+                </a>
+            </div>
+          </div>
+</section>
 </template>
 
 <script>

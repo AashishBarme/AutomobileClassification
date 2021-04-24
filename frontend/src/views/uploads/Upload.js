@@ -9,6 +9,8 @@ export default {
             object:{
                 categoryId : 0
             },
+            categoryLoading : true,
+            categoryLoaded: false,
             topicImage : null,
             CategoriesList : {},
             currentUser : JSON.parse(localStorage.getItem("user"))
@@ -37,8 +39,11 @@ export default {
                 })
                 .then(
                     (response) => {
-                        console.log(response);
-                    });
+                       if(response.status >= 200)
+                       {
+                        this.$router.go('/');
+                       }
+                });
             } catch (error) {
                 console.log(error)
             }
@@ -60,6 +65,7 @@ export default {
 
         UploadImage(e)
         {
+            this.categoryLoading = false;
             const file = e.target.files[0];
             console.log(file);
             this.topicImage = file;
@@ -76,10 +82,12 @@ export default {
                 })
                 .then(
                     (response) => {
-                        console.log(response);
+                        this.$data.categoryLoaded = true;
                         this.GetCategoryId(response.data.predictedLabel);
                         this.$data.object.Image = this.topicImage
-                    });
+                })
+                .catch(error => { console.error(error); this.categoryLoading = true})
+                .finally(() => (this.categoryLoading = true)) ;
             } catch (error) {
                 console.log(error)
             }
